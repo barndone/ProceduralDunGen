@@ -63,9 +63,9 @@ Procedural Dungeon Layout generation plugin for Unreal Engine ver. 4.27
    
    ![Example Room](ExampleRoomGeometry.png)
 
-3. Add a BoxComponent to define the area your room occupies:
+3. Add a Box Collision Component to define the area your room occupies:
     
-    **At least one box component is required for each room**  
+    **At least one box collision component is required for each room**  
    - Use a convention that best suits your project either:
       - Size the component such that it completely encapsulates the geometry of the room (if you do not want walls to overlap)
       - OR size it so that it is only occupying the inner bounds of the room (if you dont care if walls overlap with each other)
