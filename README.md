@@ -87,20 +87,22 @@ You can also refer to the StarterContent rooms to get ideas for how to set up yo
 <!-- TOC --><a name="the-dungenerator-actor"></a>
 ## The DunGenerator actor
 You have a few options when setting up and using your DunGenerator actor.
-1. Specifying a set number of rooms for your dungeon:
+1. Create a blueprint actor based on the DunGenerator class like you did with the DunGenRoom actor.
+2. Specifying a set number of rooms for your dungeon:
     - Toggle the RoomLimit field on your DunGenerator actor.
     - This will cause the MaxRoomCount field to become visible and editable.
-2. Specify the use of a random or pre determined seed:
+3. Specify the use of a random or pre determined seed:
     - Toggle the UsePredefinedSeed field for your DunGenerator actor.
     - This will cause the RandomSeedVal to become visible and editable.
     - RandomSeedVal has a min/max corresponding to the Int32 data type.
-3. Specify if you want the dungeon to be generated on "Play":
+4. Specify if you want the dungeon to be generated on "Play":
     - toggle the GenerateOnStart field.
-4. Add your rooms to their corresponding lists:
+5. Add your rooms to their corresponding lists:
     - EntryRooms - all rooms you want to be the *first* room the generator will spawn.
     - ExitRooms - all rooms you want to be the *last* room the generator will spawn.
-    - DungeonRooms - all other rooms that you want to make up the rest of the dungeon.
-5. Generate dungeons!
+    - DungeonRooms - all other rooms that you want to make up the rest of the dungeon. 
+6. Place your DunGenerator actor in your level
+7. Generate dungeons!
     - Use the "GenerateDungeon" button to generate a dungeon given the constraints and rooms specified above.
     - NOTE: The entry point of the dungeon will *always* occupy the *same world location and rotation as the dungeon generator!*
     - To quickly remove a previously spawned dungeon, press the "CleanUp" button.
