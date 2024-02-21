@@ -114,89 +114,89 @@ You have a few options when setting up and using your DunGenerator actor.
 ### Properties
 <!-- TOC --><a name="bool-roomlimit"></a>
 #### bool RoomLimit
-If set to true, will generate MaxRoomCount rooms unless that number is not possible without rooms overlapping. 
+- If set to true, will generate MaxRoomCount rooms unless that number is not possible without rooms overlapping. 
 
-Toggles visibility of MaxRoomCount.
+- Toggles visibility of MaxRoomCount.
 
-If set to false, will generate rooms randomly until an exit room is generated. Exit room is determined by if TArray ExitRooms contains the spawned room.  
+- If set to false, will generate rooms randomly until an exit room is generated. Exit room is determined by if TArray ExitRooms contains the spawned room.  
 
 <!-- TOC --><a name="int-maxroomcount"></a>
 #### int MaxRoomCount
-Controls the number of rooms the dungeon generator will spawn if RoomLimit is set to 'true'
+- Controls the number of rooms the dungeon generator will spawn if RoomLimit is set to 'true'
 
 <!-- TOC --><a name="bool-usepredefinedseed"></a>
 #### bool UsePreDefinedSeed
-If set to true, will allow the user to specify the in32 seed used to generate the rooms. 
+- If set to true, will allow the user to specify the in32 seed used to generate the rooms. 
 
-Toggles visibility of RandomSeedVal.
+- Toggles visibility of RandomSeedVal.
 
-If set to false, will generate a random seed on compile time.
+- If set to false, will generate a random seed on compile time.
 
 <!-- TOC --><a name="int32-randomseedval"></a>
 #### int32 RandomSeedVal
-Int32 value that defines the random number generator seed used by the Dungeon Generator.
+- Int32 value that defines the random number generator seed used by the Dungeon Generator.
 
 <!-- TOC --><a name="tarray-entryrooms"></a>
 #### TArray<ADunGenRoom*> EntryRooms
-List containing all rooms that you would like to use to start the dungeon.
+- List containing all rooms that you would like to use to start the dungeon.
 
-Only one of these rooms will be spawned per generation. 
+- Only one of these rooms will be spawned per generation. 
 
-This is guaranteed to be the first room spawned by the generator.
+- This is guaranteed to be the first room spawned by the generator.
 
 <!-- TOC --><a name="tarray-exitrooms"></a>
 #### TArray<ADunGenRoom*> ExitRooms
-List containing all rooms that you would like to use to end the dungeon.
+- List containing all rooms that you would like to use to end the dungeon.
 
-Only one of these rooms will be spawned per dungeon. 
+- Only one of these rooms will be spawned per dungeon. 
 
-This is guaranteed to be the last room spawned by the generator.
+- This is guaranteed to be the last room spawned by the generator.
 
 <!-- TOC --><a name="tarray-dungeonrooms"></a>
 #### TArray<ADunGenRoom*> DungeonRooms
-List of rooms you would like to use to fill the dungeon.
+- List of rooms you would like to use to fill the dungeon.
 
-If defining a room limit, N rooms will spawn where N = MaxRoomCount - 2.
+- If defining a room limit, N rooms will spawn where N = MaxRoomCount - 2.
 
 <!-- TOC --><a name="tarray-spawnedrooms"></a>
 #### TArray<ADunGenRoom*> SpawnedRooms
-List of rooms the dungeon generator spawned after generating a dungeon. 
+- List of rooms the dungeon generator spawned after generating a dungeon. 
 
 
 <!-- TOC --><a name="bool-generateonstart"></a>
 #### bool GenerateOnStart
-If true, when you BeginPlay on this level, it will generate a completely new dungeon.
+- If true, when you BeginPlay on this level, it will generate a completely new dungeon.
 
 <!-- TOC --><a name="functions"></a>
 ### Functions
 <!-- TOC --><a name="cleanup"></a>
 #### CleanUp()
-Iterates through the list of SpawnedRooms and marks each spawned DunGenRoom Actor for Destroy.
+- Iterates through the list of SpawnedRooms and marks each spawned DunGenRoom Actor for Destroy.
 
-Clears out list after destruction.
+- Clears out list after destruction.
 
 <!-- TOC --><a name="generatedungeon"></a>
 #### GenerateDungeon()
-Responsible for generating a dungeon.
 
-If RoomLimit is set to true, the generator will generate rooms until that value is reached OR there are no valid rooms the generator can spawn. If RoomLimit is set to false, it will generate rooms until an ExitRoom is spawned.
+- Responsible for generating a dungeon.
+- If RoomLimit is set to true, the generator will generate rooms until that value is reached OR there are no valid rooms the generator can spawn. If RoomLimit is set to false, it will generate rooms until an ExitRoom is spawned.
 
 
 <!-- TOC --><a name="udungendoor-getvalidexitadungenroom-room-int-absidx"></a>
 #### UDunGenDoor* GetValidExit(ADunGenRoom* room, int& absIdx)
-Given a room, will return a valid Door for the given room. Additionally assigns to a passed in integer value for having access to the index of the valid Door in the OpenDoors() list on the given room.
+- Given a room, will return a valid Door for the given room. Additionally assigns to a passed in integer value for having access to the index of the valid Door in the OpenDoors() list on the given room.
 
 <!-- TOC --><a name="adungenroom-spawnvalidroomudungendoor-entrance"></a>
 #### ADunGenRoom* SpawnValidRoom(UDunGenDoor* entrance)
-Responsible for spawning a valid room. Behavior changes if there is a RoomLimit in place.
+- Responsible for spawning a valid room. Behavior changes if there is a RoomLimit in place.
 
 <!-- TOC --><a name="rotatearoundpointudungendoor-prevroomexit-udungendoor-curroomentry-adungenroom-curroom"></a>
 #### RotateAroundPoint(UDunGenDoor* prevRoomExit, UDunGenDoor* curRoomEntry, ADunGenRoom* curRoom)
-Helper method used to rotate a room so that the previous exit and current Entry face opposite directions.
+- Helper method used to rotate a room so that the previous exit and current Entry face opposite directions.
 
 <!-- TOC --><a name="repopulatebranchingrooms"></a>
 #### RepopulateBranchingRooms()
-Used to repopulate the private list PossibleBranchRooms that is used if a room overlap is detected. Repopulated *only* when an overlap is detected. Valid rooms are those with any open doorways. 
+- Helper method used to repopulate the private list PossibleBranchRooms that is used if a room overlap is detected. Repopulated *only* when an overlap is detected. Valid rooms are those with any open doorways. 
 
 <!-- TOC --><a name="dungenroom"></a>
 ## DunGenRoom
@@ -204,38 +204,35 @@ Used to repopulate the private list PossibleBranchRooms that is used if a room o
 ### Properties
 <!-- TOC --><a name="uboxcomponent-roomcoll"></a>
 #### UBoxComponent* RoomColl
-Necessary BoxComponent used to determine if a room overlaps with another room.
+- Necessary BoxComponent used to determine if a room overlaps with another room.
 
 <!-- TOC --><a name="functions-1"></a>
 ### Functions
 
 <!-- TOC --><a name="int-getopendoors-const"></a>
 #### int GetOpenDoors() const
-Returns the number of Doors contained in OpenDoors.
+- Returns the number of Doors contained in OpenDoors.
 
 <!-- TOC --><a name="tarray-getopenportals"></a>
 #### TArray<class UDunGenDoor*> GetOpenPortals()
-Returns the list OpenDoors list of this room.
+- Returns the list OpenDoors list of this room.
 
 <!-- TOC --><a name="setportalasutilizedint-index"></a>
 #### SetPortalAsUtilized(int index)
-Given an index, mark the given room as utilized.
-
-Will move the marked room to the ClosedDoors list and remove it from the OpenDoors list. 
+- Given an index, mark the given room as utilized.
+- Will move the marked room to the ClosedDoors list and remove it from the OpenDoors list. 
 
 <!-- TOC --><a name="udungendoor-getportalbynameudungendoor-staleportal"></a>
 #### UDunGenDoor* GetPortalByName(UDunGenDoor* stalePortal)
-Helper method for returning a door attached to this room given a scene component name. 
+- Helper method for returning a door attached to this room given a scene component name. 
 
 <!-- TOC --><a name="bool-checkforroomoverlapsuboxcomponent-othercoll"></a>
 #### bool CheckForRoomOverlaps(UBoxComponent* otherColl)
-Helper method to determine if two rooms are overlapping.
-
-Uses the RoomColl BoxComponent.
+- Helper method to determine if two rooms are overlapping.
+- Uses the RoomColl BoxComponent.
 
 
 <!-- TOC --><a name="udungendoor-getlastclosedportal"></a>
 #### UDunGenDoor* GetLastClosedPortal()
-Helper method, used to return the last closed door of this room.
-
-Used if a valid room could not be spawned and we need to try the next possible room. 
+- Helper method, used to return the last closed door of this room.
+- Used if a valid room could not be spawned and we need to try the next possible room. 
