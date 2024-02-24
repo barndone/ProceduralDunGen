@@ -7,6 +7,8 @@ Procedural Dungeon Layout generation plugin for Unreal Engine ver. 4.27
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
    * [Importing the plugin](#importing-the-plugin)
+   * [Setting up your Unreal Project for use with this plugin](#setting-up-your-unreal-project)
+   * [Updating your Plugin to a newer version](#updating-your-plugin)
    * [Step-By-Step Building your own DunGenRoom BP](#step-by-step-building-your-own-dungenroom-bp)
    * [The DunGenerator actor](#the-dungenerator-actor)
 - [C++ Class Documentation](#c-class-documentation)
@@ -51,6 +53,16 @@ Procedural Dungeon Layout generation plugin for Unreal Engine ver. 4.27
 3. Copy the ProceduralDunGen folder into the plugins folder.
 4. If you would like to include ProcDunGen starter content, copy that folder into your project's content folder.
 
+<!-- TOC --><a name ="setting-up-your-unreal-project"></a>
+## Setting up your Unreal Project for use with this plugin
+
+In the event you are using a Blueprint only project, you will have to have one C++ source file included in your project for this to build (due to a bug introduced in 4.24/5). To do this, create a dummy C++ class, close your project, delete your Intermediate, Build, and Binaries folders, and then reopen the project. 
+
+<!-- TOC --><a name ="updating-your-plugin"></a>
+## Updating your Plugin to a newer version
+
+In the event you have set up a previous version of this plugin, all you should have to do is replace the ProceduralDunGen folder in your plugins folder with the newer version. 
+
 <!-- TOC --><a name="step-by-step-building-your-own-dungenroom-bp"></a>
 ## Step-By-Step Building your own DunGenRoom BP
 1. Create a blueprint class using the DunGenRoom C++ class as a base:
@@ -86,6 +98,9 @@ You can also refer to the StarterContent rooms to get ideas for how to set up yo
 
 <!-- TOC --><a name="the-dungenerator-actor"></a>
 ## The DunGenerator actor
+
+Create an actor using the DunGenerator as a parent class in the same way you created the DunGenRoom.
+
 You have a few options when setting up and using your DunGenerator actor.
 1. Create a blueprint actor based on the DunGenerator class like you did with the DunGenRoom actor.
 2. Specifying a set number of rooms for your dungeon:

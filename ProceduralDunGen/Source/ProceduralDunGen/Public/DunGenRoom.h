@@ -40,6 +40,7 @@ private:
 	float CurrentSpawnWeight;
 
 	float BranchingChance;
+
 	bool EndRoom = false;
 	
 public:	
@@ -49,21 +50,35 @@ public:
 	UPROPERTY()
 		class UBoxComponent* RoomColl;
 
+	UPROPERTY()
+	TArray<class UShapeComponent*> RoomColls;
+
+private:
+	void GetRoomColliders();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+#if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
-
+#endif
 public:	
 
 	float GetCurrentSpawnWeight() const;
 	void UpdateCurrentSpawnWeight(float delta);
 	bool IsEndRoom() const;
 	int GetOpenDoors() const;
-	TArray<class UDunGenDoor*> GetOpenPortals();
+
+	TArray<class UDunGenDoor*> GetPortals();
+
+
 	void SetPortalAsUtilized(int index);
+
 	UDunGenDoor* GetPortalByName(UDunGenDoor* stalePortal);
+
 	bool CheckForRoomOverlaps(UBoxComponent* otherColl);
+	bool CheckForRoomOverlaps(TArray<class UShapeComponent*> otherColls);
+
 	UDunGenDoor* GetLastClosedPortal();
 
 };

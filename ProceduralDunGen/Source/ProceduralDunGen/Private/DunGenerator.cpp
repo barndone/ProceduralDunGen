@@ -7,6 +7,7 @@
 #include <Components/ArrowComponent.h>
 #include "Components/BoxComponent.h"
 #include <cassert>
+#include <Misc/UObjectToken.h>
 
 // Sets default values
 ADunGenerator::ADunGenerator()
@@ -30,6 +31,79 @@ void ADunGenerator::BeginPlay()
 		GenerateDungeon();
 	}
 }
+//
+//	DunGenerator In Engine validation
+//
+#if WITH_EDITOR
+EDataValidationResult ADunGenerator::IsDataValid(TArray<FText>& ValidationErrors)
+{
+	//	cache result as parent validation
+	EDataValidationResult result = Super::IsDataValid(ValidationErrors);
+
+	bool ExitRoomInEntryList = false;
+	bool ExitRoomInRoomList = false;
+
+	for (auto& val : ExitRooms)
+	{
+		if (EntryRooms.Contains(val))
+		{
+			ExitRoomInEntryList = true;
+		}
+
+		if (DungeonRooms.Contains(val))
+		{
+			ExitRoomInRoomList = true;
+		}
+	}
+
+	if (ExitRoomInEntryList)
+	{
+		ValidationErrors.Add(FText::FromString("Exit room found in EntryRooms list. Remove entries present in ExitRooms from EntryRooms " + this->GetName()));
+		result = EDataValidationResult::Invalid;
+	}
+
+	if (ExitRoomInRoomList)
+	{
+		ValidationErrors.Add(FText::FromString("Exit room found in DungeonRooms list. Remove entries present in ExitRooms from DungeonRooms " + this->GetName()));
+		result = EDataValidationResult::Invalid;
+	}
+
+	return result;
+}
+
+void ADunGenerator::CheckForErrors()
+{
+	Super::CheckForErrors();
+
+	FMessageLog MapCheck("MapCheck");
+
+	bool ExitRoomInEntryList = false;
+	bool ExitRoomInRoomList = false;
+
+	for (auto& val : ExitRooms)
+	{
+		if (EntryRooms.Contains(val))
+		{
+			ExitRoomInEntryList = true;
+		}
+
+		if (DungeonRooms.Contains(val))
+		{
+			ExitRoomInRoomList = true;
+		}
+	}
+
+	if (ExitRoomInEntryList)
+	{
+		MapCheck.Warning()->AddToken(FUObjectToken::Create(this))->AddToken(FTextToken::Create((FText::FromString("Exit room found in EntryRooms list. Remove entries present in ExitRooms from EntryRooms " + this->GetName()))));
+	}
+
+	if (ExitRoomInRoomList)
+	{
+		MapCheck.Warning()->AddToken(FUObjectToken::Create(this))->AddToken(FTextToken::Create((FText::FromString("Exit room found in DungeonRooms list. Remove entries present in ExitRooms from DungeonRooms " + this->GetName()))));
+	}
+}
+#endif
 
 void ADunGenerator::GenerateDungeon()
 {
@@ -129,7 +203,7 @@ void ADunGenerator::GenerateDungeon()
 					//auto lastExit = SpawnedRooms.Last()->GetLastClosedPortal();
 
 					auto newRoom = Cast<ADunGenRoom>(GetWorld()->SpawnActor(GetRandomExit(), &spawnLoc));
-					auto newEntry = newRoom->GetOpenPortals()[0];
+					auto newEntry = newRoom->GetPortals()[0];
 					RotateAroundPoint(exit, newEntry, newRoom);
 					//	location of the new room
 					auto roomLoc = curRoom->GetActorLocation();
@@ -232,7 +306,7 @@ void ADunGenerator::GenerateDungeon()
 
 					//auto lastExit = SpawnedRooms.Last()->GetLastClosedPortal();
 					auto newRoom = Cast<ADunGenRoom>(GetWorld()->SpawnActor(GetRandomExit(), &spawnLoc));
-					auto newEntry = newRoom->GetOpenPortals()[0];
+					auto newEntry = newRoom->GetPortals()[0];
 					RotateAroundPoint(exit, newEntry, newRoom);
 					//	location of the new room
 					auto roomLoc = curRoom->GetActorLocation();
@@ -267,13 +341,14 @@ void ADunGenerator::GenerateDungeon()
 
 		//	TODO: update spawn weights (slowly decrease normal rooms, increase exit room)
 	}
+	OnDungeonGenerated.Broadcast();
 }
 
 UDunGenDoor* ADunGenerator::GetValidExit(ADunGenRoom* room, int & absIdx)
 {
 	TArray<UDunGenDoor*> validPortals;
 	TArray<int> validPortalIdx;
-	TArray<UDunGenDoor*> allPortals = room->GetOpenPortals();
+	TArray<UDunGenDoor*> allPortals = room->GetPortals();
 
 	for (int i = 0; i < allPortals.Num(); ++i)
 	{
@@ -401,7 +476,7 @@ ADunGenRoom* ADunGenerator::SpawnValidRoom(UDunGenDoor* entrance)
 
 			for (auto& val : SpawnedRooms)
 			{
-				if (curRoom->CheckForRoomOverlaps(val->RoomColl))
+				if (curRoom->CheckForRoomOverlaps(val->RoomColls))
 				{
 					Overlapping = true;
 				}
@@ -467,7 +542,10 @@ void ADunGenerator::CleanUp()
 
 	for (auto& val : SpawnedRooms)
 	{
-		val->Destroy();
+		if (val)
+		{
+			val->Destroy();
+		}
 	}
 
 	SpawnedRooms.Empty();

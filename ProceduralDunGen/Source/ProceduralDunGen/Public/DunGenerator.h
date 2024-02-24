@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "DunGenerator.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDungeonGeneration);
+
 UENUM()
 enum class Flow : uint8
 {
@@ -50,6 +52,11 @@ private:
 	//	list containing rooms that have open doors and are an option for branching
 	TArray<class ADunGenRoom*> PossibleBranchRooms;
 
+	/*
+* Controls wether a dungeon will be regenerated on beginning play
+*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon Parameters\|Generation Options", meta = (AllowPrivateAccess = true))
+	bool GenerateOnStart = false;
 	//	if true- limits branches to 3 or less-
 	//	otherwise, determines wether a branch should become the main path on hitting 3 rooms
 	bool HasMainPath = false;
@@ -89,11 +96,6 @@ private:
 
 	bool GenerateNavMesh = false;
 
-	/*
-* Controls wether a dungeon will be regenerated on beginning play
-*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dungeon Parameters\|Generation Options", meta = (AllowPrivateAccess = true))
-	bool GenerateOnStart = false;
 
 	UFUNCTION()
 	TSubclassOf<class ADunGenRoom> GetRandomEntry() const;
@@ -112,9 +114,15 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+#if WITH_EDITOR
+	virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+	virtual void CheckForErrors() override;
+#endif
 
 public:	
 
+	UPROPERTY(BlueprintAssignable)
+	FOnDungeonGeneration OnDungeonGenerated;
 	/*
 * Generate a new dungeon.
 */

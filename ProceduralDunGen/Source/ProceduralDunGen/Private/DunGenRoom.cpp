@@ -17,12 +17,19 @@ ADunGenRoom::ADunGenRoom()
 	
 }
 
+void ADunGenRoom::GetRoomColliders()
+{
+	GetComponents<UShapeComponent>(RoomColls);
+}
+
 // Called when the game starts or when spawned
 void ADunGenRoom::BeginPlay()
 {
 	Super::BeginPlay();
+	GetRoomColliders();
 }
 
+#if WITH_EDITOR
 EDataValidationResult ADunGenRoom::IsDataValid(TArray<FText>& ValidationErrors)
 {
 	//	cache result as parent validation
@@ -77,6 +84,7 @@ EDataValidationResult ADunGenRoom::IsDataValid(TArray<FText>& ValidationErrors)
 
 	return result;
 }
+#endif
 
 float ADunGenRoom::GetCurrentSpawnWeight() const
 {
@@ -98,7 +106,7 @@ int ADunGenRoom::GetOpenDoors() const
 	return OpenPortals.Num();
 }
 
-TArray<class UDunGenDoor*> ADunGenRoom::GetOpenPortals()
+TArray<class UDunGenDoor*> ADunGenRoom::GetPortals()
 {
 	if (OpenPortals.Num() == 0 && ClosedPortals.Num() == 0)
 	{
@@ -131,7 +139,7 @@ UDunGenDoor* ADunGenRoom::GetPortalByName(UDunGenDoor* stalePortal)
 		if (OpenPortals.Num() == 0 && ClosedPortals.Num() == 0)
 		{
 			//	populate portals list
-			GetOpenPortals();
+			GetPortals();
 		}
 
 		for (auto& val : OpenPortals)
@@ -149,7 +157,31 @@ bool ADunGenRoom::CheckForRoomOverlaps(UBoxComponent* otherColl)
 {
 	FMTDResult _;
 
-	return RoomColl->ComputePenetration(_, otherColl->GetCollisionShape(), otherColl->K2_GetComponentLocation(), FQuat(otherColl->K2_GetComponentRotation()));
+	return RoomColl->ComputePenetration(_, otherColl->GetCollisionShape(), otherColl->GetComponentLocation(), FQuat(otherColl->GetComponentRotation()));
+}
+
+bool ADunGenRoom::CheckForRoomOverlaps(TArray<UShapeComponent*> otherColls)
+{
+	bool result = false;
+	FMTDResult _;
+
+	bool checkForBounds = false;
+	while (!checkForBounds)
+	{
+		for (auto& thisCol : RoomColls)
+		{
+			for (auto& otherCol : otherColls)
+			{
+				result = thisCol->ComputePenetration(_, otherCol->GetCollisionShape(), 
+													otherCol->GetComponentLocation(), 
+													FQuat(otherCol->GetComponentRotation()));
+				checkForBounds = result;
+			}
+		}
+		checkForBounds = true;
+	}
+
+	return result;
 }
 
 UDunGenDoor* ADunGenRoom::GetLastClosedPortal()
