@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": v0.21
-	"VersionName": "Alpha 0.21",
+	"Version": 0.21
+	"VersionName": "0.21",
 	"FriendlyName": "ProceduralDunGen",
 	"Description": "Procedural Dungeon layout generator as a means of easily building out maps for 3rd Person games.",
 	"Category": "Other",
