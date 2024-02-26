@@ -470,7 +470,7 @@ ADunGenRoom* ADunGenerator::SpawnValidRoom(UDunGenDoor* entrance)
 
 		//	CHECK FOR COLLISION BETWEEN ROOMS
 
-		curRoom->RoomColl = Cast<UBoxComponent>(curRoom->GetComponentByClass(UBoxComponent::StaticClass()));
+		curRoom->GetRoomColliders();
 
 		bool Overlapping = false;
 

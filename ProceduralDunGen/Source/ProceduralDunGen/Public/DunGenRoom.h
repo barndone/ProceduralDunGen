@@ -50,10 +50,8 @@ public:
 	UPROPERTY()
 		class UBoxComponent* RoomColl;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<class UShapeComponent*> RoomColls;
-
-private:
 	void GetRoomColliders();
 
 protected:

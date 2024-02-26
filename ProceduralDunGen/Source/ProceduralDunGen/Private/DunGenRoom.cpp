@@ -19,14 +19,13 @@ ADunGenRoom::ADunGenRoom()
 
 void ADunGenRoom::GetRoomColliders()
 {
-	GetComponents<UShapeComponent>(RoomColls);
+	GetComponents(RoomColls);
 }
 
 // Called when the game starts or when spawned
 void ADunGenRoom::BeginPlay()
 {
 	Super::BeginPlay();
-	GetRoomColliders();
 }
 
 #if WITH_EDITOR
